@@ -41,7 +41,7 @@ export function ContactForm() {
           <legend className="sr-only">Dane i treść wiadomości</legend>
           <div className="grid gap-6 sm:grid-cols-2">
             <label className="block text-sm font-semibold" htmlFor="contact-name">Imię <span className="text-accent">*</span>
-              <input id="contact-name" name="name" required autoComplete="given-name" maxLength={100} placeholder="Twoje imię" className={fieldStyle} />
+              <input id="contact-name" name="Imię" required autoComplete="given-name" maxLength={100} placeholder="Twoje imię" className={fieldStyle} />
             </label>
             <label className="block text-sm font-semibold" htmlFor="contact-class">Klasa <span className="text-accent">*</span>
               <select id="contact-class" name="class" required defaultValue="" className={fieldStyle}>
