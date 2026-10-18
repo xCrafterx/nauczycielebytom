@@ -9,6 +9,8 @@ export const Route = createFileRoute("/nauczyciel/$id")({
       { name: "description", content: "Szczegóły nauczyciela szkoły Cosinus." },
       { property: "og:title", content: "Nauczyciel – Nauczyciele Cosinus" },
       { property: "og:description", content: "Szczegóły nauczyciela szkoły Cosinus." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Detail,

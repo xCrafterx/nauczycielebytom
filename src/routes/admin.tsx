@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, Plus, Trash2, LogOut, TriangleAlert } from "lucide-react";
+import { ArrowDown, ArrowUp, Plus, Trash2, LogOut, TriangleAlert, Eye, EyeOff } from "lucide-react";
 import { ADMIN_EMAIL, useAdmins, useTeachers, type Teacher } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import comingSoonImg from "@/assets/coming-soon.jpg";
+import { Button } from "@/components/ui/button";
+import { useContactOutage } from "@/lib/contact-outage";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -112,20 +114,47 @@ function Login({ noAdmin, onLogout }: { noAdmin: boolean; onLogout: () => void }
 }
 
 function Panel({ onLogout }: { onLogout: () => void }) {
-  const [tab, setTab] = useState<"t" | "a">("t");
+  const [tab, setTab] = useState<"t" | "a" | "awarie">("t");
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl font-bold">Panel Admina</h1>
         <button onClick={onLogout} className="btn-ghost-brand inline-flex items-center gap-2 px-4 py-2 text-sm"><LogOut className="h-4 w-4" />Wyloguj</button>
       </div>
-      <div className="mt-6 flex gap-2">
-        {([["t", "Edycja Nauczycieli"], ["a", "Edycja Administracji"]] as const).map(([k, l]) => (
-          <button key={k} onClick={() => setTab(k)} className={tab === k ? "btn-brand px-4 py-2 text-sm" : "btn-ghost-brand px-4 py-2 text-sm"}>{l}</button>
+      <div className="mt-6 flex flex-wrap gap-2">
+        {([["t", "Edycja Nauczycieli"], ["a", "Edycja Administracji"], ["awarie", "Awarie"]] as const).map(([k, l]) => (
+          <Button key={k} onClick={() => setTab(k)} variant={tab === k ? "default" : "secondary"} aria-pressed={tab === k}>{l}</Button>
         ))}
       </div>
-      {tab === "t" ? <TeachersEditor /> : <AdminsEditor />}
+      {tab === "t" ? <TeachersEditor /> : tab === "a" ? <AdminsEditor /> : <OutageEditor />}
     </div>
+  );
+}
+
+function OutageEditor() {
+  const { data: visible, isPending, isError, save, refetch } = useContactOutage();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const toggle = async () => {
+    if (visible === undefined) return;
+    setBusy(true);
+    setError("");
+    try { await save(!visible); }
+    catch { setError("Nie udało się zapisać zmiany. Spróbuj ponownie."); }
+    finally { setBusy(false); }
+  };
+  return (
+    <section className="mt-8 space-y-4">
+      <h2 className="font-display text-2xl font-bold">Awarie</h2>
+      <p className="font-semibold">Komunikat awarii formularza</p>
+      <p className="text-muted-foreground" role="status">{isPending ? "Ładowanie…" : isError ? "Nie udało się odczytać stanu." : visible ? "Komunikat widoczny" : "Komunikat ukryty"}</p>
+      {isError ? <Button variant="secondary" onClick={() => refetch()}>Spróbuj ponownie</Button> : (
+        <Button onClick={toggle} disabled={busy || isPending} aria-pressed={visible ?? false}>
+          {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}{busy ? "Zapisywanie…" : visible ? "Ukryj" : "Pokaż"}
+        </Button>
+      )}
+      {error && <p role="alert" className="text-destructive">{error}</p>}
+    </section>
   );
 }
 

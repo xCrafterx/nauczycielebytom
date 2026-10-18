@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Cpu, Sigma } from "lucide-react";
+import { Cpu, Sigma } from "lucide-react";
 import { useAdmins } from "@/lib/store";
 import oliwia from "@/assets/admin-oliwia.jpg";
 import tymek from "@/assets/admin-tymek.jpg";
@@ -28,15 +28,9 @@ export function AdminCards() {
               </div>
               <h3 className="mt-5 font-display text-xl font-bold">{a.name}</h3>
               <p className={helper ? "mt-1 font-bold tracking-widest text-accent" : "mt-1 text-muted-foreground"}>{a.role}</p>
-              {helper && (
-                <span className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-linear-to-r from-red-700 via-red-600 to-red-700 px-6 py-3 font-display text-sm font-bold text-white shadow-lg shadow-red-600/30 transition-transform group-hover:-translate-y-0.5 group-active:translate-y-0 motion-reduce:transform-none">
-                  Zgłoś Się
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" />
-                </span>
-              )}
             </div>
           );
-          return helper ? <Link key={a.id} to="/kontakt" className="group block rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-background">{inner}</Link> : <div key={a.id}>{inner}</div>;
+          return helper ? <Link key={a.id} to="/kontakt">{inner}</Link> : <div key={a.id}>{inner}</div>;
         })}
       </div>
     </section>

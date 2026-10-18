@@ -41,6 +41,21 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_outage: {
+        Row: {
+          id: boolean
+          visible: boolean
+        }
+        Insert: {
+          id?: boolean
+          visible?: boolean
+        }
+        Update: {
+          id?: boolean
+          visible?: boolean
+        }
+        Relationships: []
+      }
       teachers: {
         Row: {
           cele: string

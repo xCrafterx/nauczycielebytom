@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MapPin, Phone, Mail, Siren } from "lucide-react";
-import { ContactForm } from "@/components/ContactForm";
+import { useContactOutage } from "@/lib/contact-outage";
 
 export const Route = createFileRoute("/kontakt")({
   head: () => ({
@@ -9,6 +9,8 @@ export const Route = createFileRoute("/kontakt")({
       { name: "description", content: "Kontakt do ucznia od strony Nauczyciele Cosinus." },
       { property: "og:title", content: "Kontakt – Nauczyciele Cosinus" },
       { property: "og:description", content: "Kontakt do ucznia od strony Nauczyciele Cosinus." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Kontakt,
@@ -21,6 +23,7 @@ const items = [
 ];
 
 function Kontakt() {
+  const { data: outageVisible } = useContactOutage();
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
       <h1 className="text-center font-display text-4xl font-black sm:text-5xl">
@@ -44,7 +47,10 @@ function Kontakt() {
           </div>
         </div>
       </div>
-      <ContactForm />
+      <section className="mt-10 text-center">
+        {outageVisible && <p role="alert" className="mb-6 text-xl font-black uppercase text-outage sm:text-2xl">FORMULARZ AKTUALNIE NIE DZIAŁA, KONTAKT TYLKO PRZEZ SMS.</p>}
+        <h2 className="font-display text-2xl font-bold sm:text-3xl">Kontakt Przez Formularz</h2>
+      </section>
     </div>
   );
 }

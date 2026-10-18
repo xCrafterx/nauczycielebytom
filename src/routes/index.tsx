@@ -12,6 +12,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Poznaj nauczycieli szkoły Cosinus w Bytomiu." },
       { property: "og:title", content: "Nauczyciele Cosinus – Bytom" },
       { property: "og:description", content: "Poznaj nauczycieli szkoły Cosinus w Bytomiu." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
