@@ -15,6 +15,13 @@
       "when": 1792236439072,
       "tag": "0001_teachers_wady_zalety_extra_tiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792331111560,
+      "tag": "0002_site_settings_form_outage",
+      "breakpoints": true
     }
   ]
 }
