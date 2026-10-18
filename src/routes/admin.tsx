@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUp, Plus, Trash2, LogOut, TriangleAlert } from "lucide-react";
-import { ADMIN_EMAIL, useAdmins, useTeachers, type Teacher } from "@/lib/store";
+import { ADMIN_EMAIL, useAdmins, useFormOutage, useTeachers, type Teacher } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import comingSoonImg from "@/assets/coming-soon.jpg";
 
@@ -112,19 +112,19 @@ function Login({ noAdmin, onLogout }: { noAdmin: boolean; onLogout: () => void }
 }
 
 function Panel({ onLogout }: { onLogout: () => void }) {
-  const [tab, setTab] = useState<"t" | "a">("t");
+  const [tab, setTab] = useState<"t" | "a" | "f">("t");
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl font-bold">Panel Admina</h1>
         <button onClick={onLogout} className="btn-ghost-brand inline-flex items-center gap-2 px-4 py-2 text-sm"><LogOut className="h-4 w-4" />Wyloguj</button>
       </div>
-      <div className="mt-6 flex gap-2">
-        {([["t", "Edycja Nauczycieli"], ["a", "Edycja Administracji"]] as const).map(([k, l]) => (
+      <div className="mt-6 flex flex-wrap gap-2">
+        {([["t", "Edycja Nauczycieli"], ["a", "Edycja Administracji"], ["f", "Awarie"]] as const).map(([k, l]) => (
           <button key={k} onClick={() => setTab(k)} className={tab === k ? "btn-brand px-4 py-2 text-sm" : "btn-ghost-brand px-4 py-2 text-sm"}>{l}</button>
         ))}
       </div>
-      {tab === "t" ? <TeachersEditor /> : <AdminsEditor />}
+      {tab === "t" ? <TeachersEditor /> : tab === "a" ? <AdminsEditor /> : <OutageEditor />}
     </div>
   );
 }
@@ -266,6 +266,28 @@ function AdminsEditor() {
           {a.image && <button onClick={() => update(a.id, { image: undefined })} className="text-xs text-destructive">Usuń zdjęcie</button>}
         </div>
       ))}
+    </div>
+  );
+}
+
+function OutageEditor() {
+  const [on, setOn] = useFormOutage();
+  return (
+    <div className="mt-6 rounded-2xl border border-border bg-gradient-card p-6">
+      <h2 className="font-display text-xl font-bold">Awaria formularza kontaktowego</h2>
+      <p className="mt-2 text-sm text-muted-foreground">Po włączeniu na stronie Kontakt nad formularzem pojawi się czerwony komunikat, że formularz nie działa i trzeba kontaktować się telefonicznie.</p>
+      <label className="mt-5 flex cursor-pointer items-center gap-4">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={on}
+          onClick={() => setOn(!on)}
+          className={`relative h-8 w-14 shrink-0 rounded-full transition-colors ${on ? "bg-red-600" : "bg-muted"}`}
+        >
+          <span className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-[left] ${on ? "left-7" : "left-1"}`} />
+        </button>
+        <span className={`font-semibold ${on ? "text-red-500" : "text-muted-foreground"}`}>{on ? "Komunikat o awarii WŁĄCZONY" : "Komunikat o awarii wyłączony"}</span>
+      </label>
     </div>
   );
 }

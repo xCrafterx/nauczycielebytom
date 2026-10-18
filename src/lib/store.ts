@@ -61,3 +61,22 @@ export function useAdmins() {
   };
   return [list, save] as const;
 }
+
+// Shared "Awarie" switch: when on, the contact page warns that the form is down.
+export function useFormOutage() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    supabase.from("site_settings").select("form_outage").eq("id", "main").maybeSingle().then(({ data }) => {
+      if (data) setOn(data.form_outage);
+    });
+  }, []);
+  const save = async (next: boolean) => {
+    setOn(next);
+    const { error } = await supabase.from("site_settings").upsert({ id: "main", form_outage: next });
+    if (error) {
+      setOn(!next);
+      alert("Nie udało się zapisać: " + error.message);
+    }
+  };
+  return [on, save] as const;
+}

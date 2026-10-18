@@ -41,6 +41,21 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          form_outage: boolean
+          id: string
+        }
+        Insert: {
+          form_outage?: boolean
+          id: string
+        }
+        Update: {
+          form_outage?: boolean
+          id?: string
+        }
+        Relationships: []
+      }
       teachers: {
         Row: {
           cele: string

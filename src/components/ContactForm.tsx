@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { ArrowUpRight, CheckCircle2, LoaderCircle } from "lucide-react";
+import { useFormOutage } from "@/lib/store";
 
 const classes = ["1TIR", "2TIR", "3TIR", "4TIR", "5TIR", "1TC", "2TC", "3TC", "4TC", "5TC", "Inna"];
 const fieldStyle = "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/30";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [outage] = useFormOutage();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,6 +32,11 @@ export function ContactForm() {
 
   return (
     <section aria-labelledby="contact-form-title" className="mt-20">
+      {outage && (
+        <p role="alert" className="mb-8 rounded-2xl border-4 border-red-600 bg-red-600/10 p-5 text-center font-display text-2xl font-black uppercase tracking-wide text-[#ff0000] sm:text-3xl">
+          FORMULARZ AKTUALNIE NIE DZIAŁA, KONTAKTOWAĆ SIĘ PRZEZ NUMER TELEFONU!
+        </p>
+      )}
       <h2 id="contact-form-title" className="text-center font-display text-4xl font-black sm:text-5xl">
         Kontakt <span className="text-gradient">Przez Formularz</span>
       </h2>
